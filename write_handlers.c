@@ -2,19 +2,22 @@
 
 /************************* WRITE HANDLE *************************/
 /**
- * handle_write_char - Prints a string
- * @c: char types.
- * @buffer: Buffer array to handle print
- * @flags:  Calculates active flags.
- * @width: get width.
- * @precision: precision specifier
- * @size: Size specifier
+ * handle_write_char - Prints a single character with optional padding
+ * @c: The character to be printed.
+ * @buffer: Buffer array to handle the print.
+ * @flags: Active formatting flags.
+ * @width: Width specifier.
+ * @precision: Precision specifier.
+ * @size: Size specifier.
  *
- * Return: Number of chars printed.
+ * This function handles the printing of a single character 'c' based on the
+ * provided formatting options, including padding and width.
+ *
+ * Return: The number of characters printed.
  */
 int handle_write_char(char c, char buffer[],
 	int flags, int width, int precision, int size)
-{ /* char is stored at left and paddind at buffer's right */
+{
 	int i = 0;
 	char padd = ' ';
 
@@ -46,16 +49,19 @@ int handle_write_char(char c, char buffer[],
 
 /************************* WRITE NUMBER *************************/
 /**
- * write_number - Prints a string
- * @is_negative: Lista of arguments
- * @ind: char types.
- * @buffer: Buffer array to handle print
- * @flags:  Calculates active flags
- * @width: get width.
- * @precision: precision specifier
- * @size: Size specifier
+ * write_number - Prints a formatted integer with optional padding
+ * @is_negative: Indicates if the number is negative.
+ * @ind: Index at which the number starts in the buffer.
+ * @buffer: Buffer array to handle the print.
+ * @flags: Active formatting flags.
+ * @width: Width specifier.
+ * @precision: Precision specifier.
+ * @size: Size specifier.
  *
- * Return: Number of chars printed.
+ * This function handles the printing of an integer, considering flags for
+ * formatting, such as padding and width.
+ *
+ * Return: The number of characters printed.
  */
 int write_number(int is_negative, int ind, char buffer[],
 	int flags, int width, int precision, int size)
@@ -79,28 +85,30 @@ int write_number(int is_negative, int ind, char buffer[],
 }
 
 /**
- * write_num - Write a number using a bufffer
- * @ind: Index at which the number starts on the buffer
- * @buffer: Buffer
- * @flags: Flags
- * @width: width
- * @prec: Precision specifier
- * @length: Number length
- * @padd: Pading char
- * @extra_c: Extra char
+ * write_num - Writes a formatted number with optional padding
+ * @ind: Index at which the number starts in the buffer.
+ * @buffer: Buffer array to handle the print.
+ * @flags: Active formatting flags.
+ * @width: Width specifier.
+ * @prec: Precision specifier.
+ * @length: Length of the number.
+ * @padd: Padding character.
+ * @extra_c: Extra character (e.g., '+' or '-').
  *
- * Return: Number of printed chars.
+ * This function handles the printing of a formatted number based on the provided
+ * formatting options, including padding, width, and precision.
+ *
+ * Return: The number of characters printed.
  */
-int write_num(int ind, char buffer[],
-	int flags, int width, int prec,
+int write_num(int ind, char buffer[], int flags, int width, int prec,
 	int length, char padd, char extra_c)
 {
 	int i, padd_start = 1;
 
 	if (prec == 0 && ind == BUFF_SIZE - 2 && buffer[ind] == '0' && width == 0)
-		return (0); /* printf(".0d", 0)  no char is printed */
+		return (0); /* printf(".0d", 0)  no characters are printed */
 	if (prec == 0 && ind == BUFF_SIZE - 2 && buffer[ind] == '0')
-		buffer[ind] = padd = ' '; /* width is displayed with padding ' ' */
+		buffer[ind] = padd = ' '; /* Width is displayed with padding ' ' */
 	if (prec > 0 && prec < length)
 		padd = ' ';
 	while (prec > length)
@@ -112,19 +120,13 @@ int write_num(int ind, char buffer[],
 		for (i = 1; i < width - length + 1; i++)
 			buffer[i] = padd;
 		buffer[i] = '\0';
-		if (flags & F_MINUS && padd == ' ')/* Asign extra char to left of buffer */
+		if (flags & F_MINUS && padd == ' ') /* Extra char to the left of buffer */
 		{
 			if (extra_c)
 				buffer[--ind] = extra_c;
 			return (write(1, &buffer[ind], length) + write(1, &buffer[1], i - 1));
 		}
-		else if (!(flags & F_MINUS) && padd == ' ')/* extra char to left of buff */
-		{
-			if (extra_c)
-				buffer[--ind] = extra_c;
-			return (write(1, &buffer[1], i - 1) + write(1, &buffer[ind], length));
-		}
-		else if (!(flags & F_MINUS) && padd == '0')/* extra char to left of padd */
+		else /* Extra char to the left of padding */
 		{
 			if (extra_c)
 				buffer[--padd_start] = extra_c;
@@ -138,22 +140,24 @@ int write_num(int ind, char buffer[],
 }
 
 /**
- * write_unsgnd - Writes an unsigned number
- * @is_negative: Number indicating if the num is negative
- * @ind: Index at which the number starts in the buffer
- * @buffer: Array of chars
- * @flags: Flags specifiers
- * @width: Width specifier
- * @precision: Precision specifier
- * @size: Size specifier
+ * write_unsgnd - Writes a formatted unsigned number with optional padding
+ * @is_negative: Not used here.
+ * @ind: Index at which the number starts in the buffer.
+ * @buffer: Buffer array to handle the print.
+ * @flags: Active formatting flags.
+ * @width: Width specifier.
+ * @precision: Precision specifier.
+ * @size: Size specifier.
  *
- * Return: Number of written chars.
+ * This function handles the printing of a formatted unsigned number based on the
+ * provided formatting options, including padding, width, and precision.
+ *
+ * Return: The number of characters printed.
  */
 int write_unsgnd(int is_negative, int ind,
 	char buffer[],
 	int flags, int width, int precision, int size)
 {
-	/* The number is stored at the bufer's right and starts at position i */
 	int length = BUFF_SIZE - ind - 1, i = 0;
 	char padd = ' ';
 
@@ -161,7 +165,7 @@ int write_unsgnd(int is_negative, int ind,
 	UNUSED(size);
 
 	if (precision == 0 && ind == BUFF_SIZE - 2 && buffer[ind] == '0')
-		return (0); /* printf(".0d", 0)  no char is printed */
+		return (0); /* printf(".0u", 0)  no characters are printed */
 
 	if (precision > 0 && precision < length)
 		padd = ' ';
@@ -182,11 +186,11 @@ int write_unsgnd(int is_negative, int ind,
 
 		buffer[i] = '\0';
 
-		if (flags & F_MINUS) /* Asign extra char to left of buffer [buffer>padd]*/
+		if (flags & F_MINUS) /* Extra char to the left of buffer [buffer > padd] */
 		{
 			return (write(1, &buffer[ind], length) + write(1, &buffer[0], i));
 		}
-		else /* Asign extra char to left of padding [padd>buffer]*/
+		else /* Extra char to the left of padding [padd > buffer] */
 		{
 			return (write(1, &buffer[0], i) + write(1, &buffer[ind], length));
 		}
@@ -196,17 +200,20 @@ int write_unsgnd(int is_negative, int ind,
 }
 
 /**
- * write_pointer - Write a memory address
- * @buffer: Arrays of chars
- * @ind: Index at which the number starts in the buffer
- * @length: Length of number
- * @width: Width specifier
- * @flags: Flags specifier
- * @padd: Char representing the padding
- * @extra_c: Char representing extra char
- * @padd_start: Index at which padding should start
+ * write_pointer - Writes a formatted memory address
+ * @buffer: Buffer array to handle the print.
+ * @ind: Index at which the memory address starts in the buffer.
+ * @length: Length of the memory address.
+ * @width: Width specifier.
+ * @flags: Active formatting flags.
+ * @padd: Padding character.
+ * @extra_c: Extra character (e.g., '+' or '-').
+ * @padd_start: Index at which padding should start.
  *
- * Return: Number of written chars.
+ * This function handles the printing of a formatted memory address based on the
+ * provided formatting options, including padding, width, and extra character.
+ *
+ * Return: The number of characters printed.
  */
 int write_pointer(char buffer[], int ind, int length,
 	int width, int flags, char padd, char extra_c, int padd_start)
@@ -218,7 +225,7 @@ int write_pointer(char buffer[], int ind, int length,
 		for (i = 3; i < width - length + 3; i++)
 			buffer[i] = padd;
 		buffer[i] = '\0';
-		if (flags & F_MINUS && padd == ' ')/* Asign extra char to left of buffer */
+		if (flags & F_MINUS && padd == ' ') /* Extra char to the left of buffer */
 		{
 			buffer[--ind] = 'x';
 			buffer[--ind] = '0';
@@ -226,15 +233,7 @@ int write_pointer(char buffer[], int ind, int length,
 				buffer[--ind] = extra_c;
 			return (write(1, &buffer[ind], length) + write(1, &buffer[3], i - 3));
 		}
-		else if (!(flags & F_MINUS) && padd == ' ')/* extra char to left of buffer */
-		{
-			buffer[--ind] = 'x';
-			buffer[--ind] = '0';
-			if (extra_c)
-				buffer[--ind] = extra_c;
-			return (write(1, &buffer[3], i - 3) + write(1, &buffer[ind], length));
-		}
-		else if (!(flags & F_MINUS) && padd == '0')/* extra char to left of padd */
+		else /* Extra char to the left of padding */
 		{
 			if (extra_c)
 				buffer[--padd_start] = extra_c;
@@ -250,3 +249,4 @@ int write_pointer(char buffer[], int ind, int length,
 		buffer[--ind] = extra_c;
 	return (write(1, &buffer[ind], BUFF_SIZE - ind - 1));
 }
+

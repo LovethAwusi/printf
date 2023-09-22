@@ -1,4 +1,4 @@
-In this project we were asked to creeate our own printf
+In this project we were asked to creeate our own printf. We performed the following:
 
 0. I'm not going anywhere. You can print that wherever you want to. I'm here and I'm a Spur for life
 mandatory
